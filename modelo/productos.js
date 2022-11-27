@@ -5,8 +5,11 @@ const producEsquema = new esquema({
     id: String,
     nombreProducto: String,
     precio: String,
-    cantidad: esquema.Types.Number,
-    proveedor: {type:esquema.ObjectId, ref:"proveedores"}
+    cantidad: Number,
+    proveedor: [{
+        type: esquema.Types.ObjectId,
+        ref: 'proveedores'
+    }]
 });
 
 module.exports = mongoose.model('productos',producEsquema);

@@ -19,6 +19,8 @@
             <th>Nombre</th>
             <th>Precio</th>
             <th>Cantidad</th>
+            <th>Id Proveedor</th>
+            <th>Nombre Proveedor</th>
         </thead>
         <tbody>
             <% for(var i = 0; i < listaProductos.length; i++){ %>
@@ -27,6 +29,8 @@
                     <td> <%= listaProductos[i].nombreProducto %></td>
                     <td> <%= listaProductos[i].precio %></td>
                     <td> <%= listaProductos[i].cantidad %></td>
+                    <td> <%= listaProductos[i].proveedor %></td>
+                    <!-- <td> <%= listaProductos[i].proveedor.nombreProveedor %></td> -->
                 </tr>
             <%}%>
         </tbody>

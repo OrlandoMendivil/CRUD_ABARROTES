@@ -15,11 +15,19 @@ rutas.use(function(req, res, next){
 })
 
 rutas.get('/consultar', async(req, res)=>{
-    const listaProductos = await producto.find();
+    const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
     res.render("consultar",{listaProductos});
     
-})
+});
 
+rutas.get('/prueba', async(req, res)=>{
+ producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'}).exec(function(err, proveedor){
+        if(err){}
+        arr = proveedor;
+        res.json(arr);
+        console.log(arr);
+    });
+});
 
 rutas.post('/registrar', async(req, res)=>{
     var p = new producto(req.body);

@@ -8,7 +8,6 @@ const proveedores = require('../modelo/proveedor');
 rutas.get('/consultarProveedores', async(req, res)=>{
     const listaProveedores = await proveedores.find();
     res.send(listaProveedores);
-    console.log("Si se conecto al endpoint");
 });
 
 rutas.get('/registrarProveedor', async(req, res)=>{
@@ -20,4 +19,10 @@ rutas.post('/registrarProveedor', async(req, res)=>{
     await proveedores.insertMany(p);
     res.redirect('/registrarProveedor');   
 });
+
+rutas.get('/registrar', async(req, res)=>{
+    const list = await proveedores.find();
+    res.render('registrar', {list});
+});
+
 module.exports = rutas;
