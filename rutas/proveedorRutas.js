@@ -5,6 +5,14 @@ const rutas = express.Router();
 
 const proveedores = require('../modelo/proveedor');
 
+rutas.use(function(req, res, next){
+    if(req.query._method=="DELETE"){
+        req.method="DELETE";
+        req.url = req.path;
+    }
+    next();
+})
+
 rutas.get('/consultarProveedores', async(req, res)=>{
     const listaProveedores = await proveedores.find();
     res.send(listaProveedores);
@@ -23,6 +31,17 @@ rutas.post('/registrarProveedor', async(req, res)=>{
 rutas.get('/registrar', async(req, res)=>{
     const list = await proveedores.find();
     res.render('registrar', {list});
+});
+
+rutas.get('/eliminarProveedor', async(req, res)=>{
+    const listaProve = await proveedores.find();
+    res.render('eliminarProveedor', {listaProve});
+});
+
+rutas.delete('/eliminarProveedor/:id', async(req,res, next)=>{
+    const id = req.params.id;
+    await proveedores.deleteOne({id:id});
+    res.redirect('/eliminarProveedor')
 });
 
 module.exports = rutas;
