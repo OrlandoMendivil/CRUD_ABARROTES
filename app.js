@@ -12,9 +12,13 @@ app.set('views',__dirname + '/vistas');
 app.set('view engine', 'ejs');
 app.disable('view cache');
 
+const rutasProve = require('./rutas/proveedorRutas');
 const rutas = require('./rutas/index');
+
+app.use('/',rutasProve);
 app.use('/',rutas);
 app.use('/registrar', rutas);
+
 
 
 
