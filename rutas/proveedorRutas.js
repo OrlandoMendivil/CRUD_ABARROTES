@@ -20,7 +20,8 @@ rutas.use(function(req, res, next){
 
 rutas.get('/consultarProveedores', async(req, res)=>{
     const listaProveedores = await proveedores.find();
-    res.send(listaProveedores);
+    res.render("consultarProveedores", {listaProveedores});
+
 });
 
 rutas.get('/registrarProveedor', async(req, res)=>{
@@ -66,13 +67,27 @@ rutas.put('/actualizarProducto/:id', async(req,res, next)=>{
     await producto.updateOne({id:id}, { $set:{cantidad: p.cantidad} });
     await producto.updateOne({id:id}, { $set:{proveedor: p.proveedor} });
 
-    //await proveedores.updateOne({id:id});
-    res.redirect('/eliminar')
+    res.redirect('/eliminar');
 
+});
 
+rutas.get('/actualizarProveedor/:id', async(req, res)=>{
+    const id = req.params.id;
+    const proveedordb = await proveedores.findOne({id:id}).exec();
+    res.render('actualizarProveedor', {proveedordb});
     
-    //await producto.updateOne;
-    //res.redirect('/registrar');
+});
+
+rutas.put('/actualizarProveedor/:id', async(req,res, next)=>{
+    const id = req.params.id;
+    var p = new proveedores(req.body);
+
+    await proveedores.updateOne({id:id}, { $set:{nombreProveedor: p.nombreProveedor} });
+    await proveedores.updateOne({id:id}, { $set:{direc: p.direc} });
+    await proveedores.updateOne({id:id}, { $set:{telefono: p.telefono} });
+
+    res.redirect('/eliminarProveedor');
+
 });
 
 module.exports = rutas;
