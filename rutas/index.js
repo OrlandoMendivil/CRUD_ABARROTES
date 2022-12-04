@@ -11,6 +11,11 @@ rutas.use(function(req, res, next){
         req.method="DELETE";
         req.url = req.path;
     }
+
+    if(req.query._method=='PUT'){
+        req.method='PUT';
+        req.url= req.path;
+    }
     next();
 })
 
@@ -35,9 +40,9 @@ rutas.post('/registrar', async(req, res)=>{
     res.redirect('/registrar');
 });
 
-rutas.get('/registrar', async(req,res)=>{
-    res.render("registrar");
-})
+//rutas.get('/registrar', async(req,res)=>{
+  //  res.render("registrar");
+//})
 
 rutas.delete('/eliminar/:id', async(req,res, next)=>{
     const id = req.params.id;
@@ -50,5 +55,11 @@ rutas.get('/eliminar',async(req,res)=>{
     res.render("eliminar",{listaProductos});
 });
 
+//rutas.get('/actualizar/:id',async(req,res)=>{
+  //  const id = req.params.id;
+    //console.log(id);
+    //const productodb = await producto.findOne({id:id}).exec();
+    //res.render("actualizarProducto",{productodb});
+//});
 
 module.exports = rutas;
