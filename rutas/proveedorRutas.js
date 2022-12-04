@@ -11,6 +11,10 @@ rutas.use(function(req, res, next){
         req.method="DELETE";
         req.url = req.path;
     }
+    if(req.query._method=='PUT'){
+        req.method='PUT';
+        req.url= req.path;
+    }
     next();
 })
 
@@ -51,6 +55,24 @@ rutas.get('/actualizarProducto/:id', async(req, res)=>{
     const productodb = await producto.findOne({id:id}).exec();
     res.render('actualizarProducto', {list, productodb});
     
+});
+
+rutas.put('/actualizarProducto/:id', async(req,res, next)=>{
+    const id = req.params.id;
+    var p = new producto(req.body);
+
+    await producto.updateOne({id:id}, { $set:{nombreProducto: p.nombreProducto} });
+    await producto.updateOne({id:id}, { $set:{precio: p.precio} });
+    await producto.updateOne({id:id}, { $set:{cantidad: p.cantidad} });
+    await producto.updateOne({id:id}, { $set:{proveedor: p.proveedor} });
+
+    //await proveedores.updateOne({id:id});
+    res.redirect('/eliminar')
+
+
+    
+    //await producto.updateOne;
+    //res.redirect('/registrar');
 });
 
 module.exports = rutas;

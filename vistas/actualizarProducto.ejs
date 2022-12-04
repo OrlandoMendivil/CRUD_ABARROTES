@@ -22,7 +22,7 @@
                         <h3>Actualizar Producto</h3>
                     </div>
                     <div class="card-body">
-                        <form action="/registrar" , method="POST"
+                        <form action="/actualizarProducto/<%= productodb.id %>?_method=PUT" , method="POST"
                             onsubmit="return confirm('¿Realmente desea actualizar este producto?');">
                             <div class="form-group">
                                 <input type="text" id= "idProducto" name="id" placeholder="Inserte el ID" class="form-control" readonly /><br>
