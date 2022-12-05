@@ -37,8 +37,7 @@ rutas.post('/registrarProveedor', async(req, res)=>{
 rutas.get('/registrar', async(req, res)=>{
     const list = await proveedores.find();
     //if(list.length == 0){
-        //window.alert('Se requiere de por lo menos un proveedor para poder registrar un producto...');
-        //res.redirect('/consultar');
+       //res.redirect('/consultar');
     //}else{
         res.render('registrar', {list});
     //}
