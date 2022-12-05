@@ -43,15 +43,15 @@ rutas.get('/registrar', async(req, res)=>{
     //}
 });
 
-rutas.get('/eliminarProveedor', async(req, res)=>{
+rutas.get('/editarProveedor', async(req, res)=>{
     const listaProve = await proveedores.find();
-    res.render('eliminarProveedor', {listaProve});
+    res.render('editarProveedor', {listaProve});
 });
 
-rutas.delete('/eliminarProveedor/:id', async(req,res, next)=>{
+rutas.delete('/editarProveedor/:id', async(req,res, next)=>{
     const id = req.params.id;
     await proveedores.deleteOne({id:id});
-    res.redirect('/eliminarProveedor')
+    res.redirect('/editarProveedor')
 });
 
 rutas.get('/actualizarProducto/:id', async(req, res)=>{
@@ -71,7 +71,7 @@ rutas.put('/actualizarProducto/:id', async(req,res, next)=>{
     await producto.updateOne({id:id}, { $set:{cantidad: p.cantidad} });
     await producto.updateOne({id:id}, { $set:{proveedor: p.proveedor} });
 
-    res.redirect('/eliminar');
+    res.redirect('/editarProductos');
 
 });
 
@@ -90,7 +90,7 @@ rutas.put('/actualizarProveedor/:id', async(req,res, next)=>{
     await proveedores.updateOne({id:id}, { $set:{direc: p.direc} });
     await proveedores.updateOne({id:id}, { $set:{telefono: p.telefono} });
 
-    res.redirect('/eliminarProveedor');
+    res.redirect('/editarProveedor');
 
 });
 

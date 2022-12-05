@@ -44,15 +44,15 @@ rutas.post('/registrar', async(req, res)=>{
   //  res.render("registrar");
 //})
 
-rutas.delete('/eliminar/:id', async(req,res, next)=>{
+rutas.delete('/editarProductos/:id', async(req,res, next)=>{
     const id = req.params.id;
     await producto.deleteOne({id:id});
-    res.redirect('/eliminar')
+    res.redirect('/editarProductos')
 });
 
-rutas.get('/eliminar',async(req,res)=>{
+rutas.get('/editarProductos',async(req,res)=>{
     const listaProductos = await producto.find();
-    res.render("eliminar",{listaProductos});
+    res.render("editarProductos",{listaProductos});
 });
 
 //rutas.get('/actualizar/:id',async(req,res)=>{
@@ -62,4 +62,7 @@ rutas.get('/eliminar',async(req,res)=>{
     //res.render("actualizarProducto",{productodb});
 //});
 
+rutas.get('/',async(req,res)=>{
+    res.render("inicio");
+});
 module.exports = rutas;
