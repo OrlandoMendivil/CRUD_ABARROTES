@@ -19,18 +19,26 @@
             <th>Nombre</th>
             <th>Precio</th>
             <th>Cantidad</th>
+            <th>Proveedor</th>
             <th>Eliminar</th>
         </thead>
         <tbody>
             <% for(var i = 0; i < listaProductos.length; i++){ %>
+                <% var proveedor=listaProductos[i].proveedor.toString(); var proveedorSub=proveedor.substring(20,
+                        proveedor.length-3); %>
+
                 <tr>
                     <td> <%= listaProductos[i].id %></td>
                     <td> <%= listaProductos[i].nombreProducto %></td>
                     <td> <%= listaProductos[i].precio %></td>
                     <td> <%= listaProductos[i].cantidad %></td>
                     <td>
+                        <%= proveedorSub %>
+                    </td>
+                    <td>
                         <a href="/actualizarProducto/<%= listaProductos[i].id %>" class="btn btn-success">Actualizar</a>
                         <a href="/editarProductos/<%= listaProductos[i].id %>?_method=DELETE" class="btn btn-danger" onclick="return confirm('¿Esta seguro de que quiere eliminar este producto?')">Eliminar</a></td>
+                    </td>
                 </tr>
             <%}%>
         </tbody>

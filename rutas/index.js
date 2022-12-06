@@ -61,8 +61,9 @@ rutas.delete('/editarProductos/:id', async(req,res, next)=>{
 });
 
 rutas.get('/editarProductos',async(req,res)=>{
-    const listaProductos = await producto.find();
+    const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
     res.render("editarProductos",{listaProductos});
+
 });
 
 //rutas.get('/actualizar/:id',async(req,res)=>{
