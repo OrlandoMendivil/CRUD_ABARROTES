@@ -2,7 +2,10 @@ const { render } = require('ejs');
 const {application} = require('express');
 const express = require('express');
 const rutas = express.Router();
+ 
+const funciones = require('../JS/funciones');
 
+const proveedores = require('../modelo/proveedor');
 const producto = require('../modelo/productos');
 
 
@@ -25,17 +28,22 @@ rutas.get('/consultar', async(req, res)=>{
     
 });
 
-rutas.get('/prueba', async(req, res)=>{
- producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'}).exec(function(err, proveedor){
-        if(err){}
-        arr = proveedor;
-        res.json(arr);
-        console.log(arr);
-    });
-});
+// rutas.get('/prueba', async(req, res)=>{
+//     var pro = funciones.buscarNombre(req.body.nombreProveedor);
+// });
+
+ function prueba(req){
+    console.log(funciones.buscarNombre(req.body.proveedor));
+    return  funciones.buscarNombre(req.body.proveedor);  
+ }
 
 rutas.post('/registrar', async(req, res)=>{
-    var p = new producto(req.body);
+   var id = req.body.id;
+   var nombreProducto = req.body.nombreProducto;
+   var precio = req.body.precio;
+   var cantidad = req.body.cantidad;
+   var p = new producto({'id':id, 'nombreProducto': nombreProducto, 'precio':precio, 'cantidad':cantidad, 'proveedor':prueba(req)});
+    
     await producto.insertMany(p);
     res.redirect('/registrar');
 });

@@ -17,7 +17,6 @@ const rutas = require('./rutas/index');
 
 app.use('/',rutasProve);
 app.use('/',rutas);
-app.use('/registrar', rutas);
 
 
 
