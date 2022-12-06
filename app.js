@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({extended:false}));
 
 //Conexion a la base de datos. 
 const dataBase = require('mongoose');

@@ -3,7 +3,6 @@ const {application} = require('express');
 const express = require('express');
 const rutas = express.Router();
  
-const funciones = require('../JS/funciones');
 
 const proveedores = require('../modelo/proveedor');
 const producto = require('../modelo/productos');
@@ -42,12 +41,15 @@ rutas.post('/registrar', async(req, res)=>{
    var nombreProducto = req.body.nombreProducto;
    var precio = req.body.precio;
    var cantidad = req.body.cantidad;
-   var p = new producto({'id':id, 'nombreProducto': nombreProducto, 'precio':precio, 'cantidad':cantidad, 'proveedor':prueba(req)});
+    var provedor = await proveedores.findOne({nombreProveedor:req.body.proveedor});
+    console.log(provedor)
+   var p = new producto({'id':id, 'nombreProducto': nombreProducto, 'precio':precio, 'cantidad':cantidad, 'proveedor':provedor._id});
     
     await producto.insertMany(p);
     res.redirect('/registrar');
 });
 
+    
 //rutas.get('/registrar', async(req,res)=>{
   //  res.render("registrar");
 //})
