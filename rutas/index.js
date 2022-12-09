@@ -2,7 +2,7 @@ const { render } = require('ejs');
 const {application} = require('express');
 const express = require('express');
 const rutas = express.Router();
- 
+const {requiresAuth} = require('express-openid-connect');
 
 const proveedores = require('../modelo/proveedor');
 const producto = require('../modelo/productos');
@@ -21,20 +21,15 @@ rutas.use(function(req, res, next){
     next();
 })
 
-rutas.get('/consultar', async(req, res)=>{
+rutas.get('/consultar', requiresAuth(), async(req, res)=>{
     const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
-    res.render("consultar",{listaProductos});
+    res.render("consultar",{listaProductos,     
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
+    res.status(200).json();
     
 });
 
-// rutas.get('/prueba', async(req, res)=>{
-//     var pro = funciones.buscarNombre(req.body.nombreProveedor);
-// });
-
- function prueba(req){
-    console.log(funciones.buscarNombre(req.body.proveedor));
-    return  funciones.buscarNombre(req.body.proveedor);  
- }
 
 rutas.post('/registrar', async(req, res)=>{
    var id = req.body.id;
@@ -50,6 +45,7 @@ rutas.post('/registrar', async(req, res)=>{
 });
 
     
+
 //rutas.get('/registrar', async(req,res)=>{
   //  res.render("registrar");
 //})
@@ -60,10 +56,21 @@ rutas.delete('/editarProductos/:id', async(req,res, next)=>{
     res.redirect('/editarProductos')
 });
 
-rutas.get('/editarProductos',async(req,res)=>{
+rutas.get('/editarProductos', requiresAuth(),async(req,res)=>{
     const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
-    res.render("editarProductos",{listaProductos});
+    res.render("editarProductos",{listaProductos,
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
 
+});
+
+rutas.post('/eliminarProducto', async(req, res)=>{
+    try{
+        await producto.deleteOne({id:req.body.id});
+        res.status(200).send({success:true,msg:'Se ha eliminado el producto'});
+    }catch(error){
+        res.status(400).send({success:false, msg:error.message});
+    }
 });
 
 //rutas.get('/actualizar/:id',async(req,res)=>{
@@ -73,7 +80,11 @@ rutas.get('/editarProductos',async(req,res)=>{
     //res.render("actualizarProducto",{productodb});
 //});
 
-rutas.get('/',async(req,res)=>{
-    res.render("inicio");
+
+rutas.get('/', requiresAuth(),async(req,res)=>{
+    console.log(req.oidc.isAuthenticated());
+    res.render("inicio", {
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
 });
 module.exports = rutas;

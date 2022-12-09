@@ -2,6 +2,7 @@ const {render} = require("ejs");
 const {application} = require("express");
 const express = require('express');
 const rutas = express.Router();
+const {requiresAuth} = require('express-openid-connect');
 
 const proveedores = require('../modelo/proveedor');
 const producto = require('../modelo/productos');
@@ -18,14 +19,17 @@ rutas.use(function(req, res, next){
     next();
 })
 
-rutas.get('/consultarProveedores', async(req, res)=>{
+rutas.get('/consultarProveedores', requiresAuth(), async(req, res)=>{
     const listaProveedores = await proveedores.find();
-    res.render("consultarProveedores", {listaProveedores});
+    res.render("consultarProveedores", {listaProveedores,
+        isAuthenticated: req.oidc.isAuthenticated()
+    });
 
 });
 
-rutas.get('/registrarProveedor', async(req, res)=>{
-    res.render('RegistrarProveedor');
+rutas.get('/registrarProveedor', requiresAuth(), async(req, res)=>{
+    res.render('RegistrarProveedor',{
+        isAuthenticated: req.oidc.isAuthenticated()});
 });
 
 rutas.post('/registrarProveedor', async(req, res)=>{
@@ -34,18 +38,29 @@ rutas.post('/registrarProveedor', async(req, res)=>{
     res.redirect('/registrarProveedor');   
 });
 
-rutas.get('/registrar', async(req, res)=>{
+rutas.get('/registrar',requiresAuth(), async(req, res)=>{
     const list = await proveedores.find();
     //if(list.length == 0){
        //res.redirect('/consultar');
     //}else{
-        res.render('registrar', {list});
+        res.render('registrar', {list, 
+            isAuthenticated: req.oidc.isAuthenticated()});
     //}
 });
 
-rutas.get('/editarProveedor', async(req, res)=>{
+rutas.get('/editarProveedor',requiresAuth(), async(req, res)=>{
     const listaProve = await proveedores.find();
-    res.render('editarProveedor', {listaProve});
+    res.render('editarProveedor', {listaProve,
+         isAuthenticated: req.oidc.isAuthenticated()});
+});
+
+rutas.post('/eliminarProveedor', async(req, res)=>{
+    try{
+        await proveedores.deleteOne({id:req.body.id});
+        res.status(200).send({success:true,msg:'Post delete'});
+    }catch(error){
+        res.status(400).send({success:false, msg:error.message});
+    }
 });
 
 rutas.delete('/editarProveedor/:id', async(req,res, next)=>{
@@ -54,11 +69,12 @@ rutas.delete('/editarProveedor/:id', async(req,res, next)=>{
     res.redirect('/editarProveedor')
 });
 
-rutas.get('/actualizarProducto/:id', async(req, res)=>{
+rutas.get('/actualizarProducto/:id', requiresAuth(),async(req, res)=>{
     const list = await proveedores.find();
     const id = req.params.id;
     const productodb = await producto.findOne({id:id}).exec();
-    res.render('actualizarProducto', {list, productodb});
+    res.render('actualizarProducto', {list, productodb,
+        isAuthenticated: req.oidc.isAuthenticated()});
     
 });
 
@@ -75,10 +91,10 @@ rutas.put('/actualizarProducto/:id', async(req,res, next)=>{
 
 });
 
-rutas.get('/actualizarProveedor/:id', async(req, res)=>{
+rutas.get('/actualizarProveedor/:id',requiresAuth(), async(req, res)=>{
     const id = req.params.id;
     const proveedordb = await proveedores.findOne({id:id}).exec();
-    res.render('actualizarProveedor', {proveedordb});
+    res.render('actualizarProveedor', {proveedordb,isAuthenticated: req.oidc.isAuthenticated()});
     
 });
 
