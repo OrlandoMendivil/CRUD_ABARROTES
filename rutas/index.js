@@ -2,7 +2,7 @@ const { render } = require('ejs');
 const {application} = require('express');
 const express = require('express');
 const rutas = express.Router();
- 
+const {requiresAuth} = require('express-openid-connect');
 
 const proveedores = require('../modelo/proveedor');
 const producto = require('../modelo/productos');
@@ -21,9 +21,11 @@ rutas.use(function(req, res, next){
     next();
 })
 
-rutas.get('/consultar', async(req, res)=>{
+rutas.get('/consultar', requiresAuth(), async(req, res)=>{
     const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
-    res.render("consultar",{listaProductos});
+    res.render("consultar",{listaProductos,     
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
     
 });
 
@@ -60,9 +62,11 @@ rutas.delete('/editarProductos/:id', async(req,res, next)=>{
     res.redirect('/editarProductos')
 });
 
-rutas.get('/editarProductos',async(req,res)=>{
+rutas.get('/editarProductos', requiresAuth(),async(req,res)=>{
     const listaProductos = await producto.find().populate({path: 'proveedor', select:'nombreProveedor -_id'});
-    res.render("editarProductos",{listaProductos});
+    res.render("editarProductos",{listaProductos,
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
 
 });
 
@@ -73,7 +77,11 @@ rutas.get('/editarProductos',async(req,res)=>{
     //res.render("actualizarProducto",{productodb});
 //});
 
-rutas.get('/',async(req,res)=>{
-    res.render("inicio");
+
+rutas.get('/', requiresAuth(),async(req,res)=>{
+    console.log(req.oidc.isAuthenticated());
+    res.render("inicio", {
+        isAuthenticated: req.oidc.isAuthenticated(),
+    });
 });
 module.exports = rutas;
