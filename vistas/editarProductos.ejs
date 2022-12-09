@@ -37,7 +37,7 @@
                     </td>
                     <td>
                         <a href="/actualizarProducto/<%= listaProductos[i].id %>" class="btn btn-success">Actualizar</a>
-                        <a href="/editarProductos/<%= listaProductos[i].id %>?_method=DELETE" class="btn btn-danger" onclick="return confirm('¿Esta seguro de que quiere eliminar este producto?')">Eliminar</a></td>
+                        <a href="#" class="btn btn-danger deletePost" data-id="<%= listaProductos[i].id %>">Eliminar</a>
                     </td>
                 </tr>
             <%}%>
@@ -47,3 +47,25 @@
     
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+    $('.deletePost').click(function(){
+        var post = $(this).attr('data-id');
+        var obj = $(this);
+
+        $.ajax({
+            url:"/eliminarProducto",
+            type:"POST",
+            data:{id: post},
+            success:function(response){
+                if(response.success == true){
+                    $(obj).parent().parent().remove();
+                }else{
+                }
+            }
+        })
+    })
+})
+</script>

@@ -40,15 +40,36 @@
                     </td>
                     <td>
                         <a href="/actualizarProveedor/<%= listaProve[i].id %>" class="btn btn-success">Actualizar</a>
-                        <a id="eliminarSummit" href="/editarProveedor/<%= listaProve[i].id %>?_method=DELETE" class="btn btn-danger"
-                            onclick="return confirm('¿Esta seguro de que quiere eliminar este producto?')">Eliminar</a>
+                        <a href="#"  data-id="<%= listaProve[i].id %>" class="btn btn-danger deletePost" >Eliminar</a>
                     </td>
                 </tr>
                 <%}%>
         </tbody>
     </table>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="../ajax.js" charset="UTF-8"></script>
+
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script>
+$(document).ready(function(){
+    $('.deletePost').click(function(){
+        var post = $(this).attr('data-id');
+        var obj = $(this);
+
+        $.ajax({
+            url:"/eliminarProveedor",
+            type:"POST",
+            data:{id: post},
+            success:function(response){
+                if(response.success == true){
+                    $(obj).parent().parent().remove();
+                    onclick="return confirm('¿Esta seguro de que quiere eliminar este producto?')";
+                }else{
+                }
+            }
+        })
+    })
+})
+</script>
+

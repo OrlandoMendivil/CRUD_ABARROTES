@@ -26,17 +26,10 @@ rutas.get('/consultar', requiresAuth(), async(req, res)=>{
     res.render("consultar",{listaProductos,     
         isAuthenticated: req.oidc.isAuthenticated(),
     });
+    res.status(200).json();
     
 });
 
-// rutas.get('/prueba', async(req, res)=>{
-//     var pro = funciones.buscarNombre(req.body.nombreProveedor);
-// });
-
- function prueba(req){
-    console.log(funciones.buscarNombre(req.body.proveedor));
-    return  funciones.buscarNombre(req.body.proveedor);  
- }
 
 rutas.post('/registrar', async(req, res)=>{
    var id = req.body.id;
@@ -52,6 +45,7 @@ rutas.post('/registrar', async(req, res)=>{
 });
 
     
+
 //rutas.get('/registrar', async(req,res)=>{
   //  res.render("registrar");
 //})
@@ -68,6 +62,15 @@ rutas.get('/editarProductos', requiresAuth(),async(req,res)=>{
         isAuthenticated: req.oidc.isAuthenticated(),
     });
 
+});
+
+rutas.post('/eliminarProducto', async(req, res)=>{
+    try{
+        await producto.deleteOne({id:req.body.id});
+        res.status(200).send({success:true,msg:'Se ha eliminado el producto'});
+    }catch(error){
+        res.status(400).send({success:false, msg:error.message});
+    }
 });
 
 //rutas.get('/actualizar/:id',async(req,res)=>{

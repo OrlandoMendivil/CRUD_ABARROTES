@@ -54,6 +54,15 @@ rutas.get('/editarProveedor',requiresAuth(), async(req, res)=>{
          isAuthenticated: req.oidc.isAuthenticated()});
 });
 
+rutas.post('/eliminarProveedor', async(req, res)=>{
+    try{
+        await proveedores.deleteOne({id:req.body.id});
+        res.status(200).send({success:true,msg:'Post delete'});
+    }catch(error){
+        res.status(400).send({success:false, msg:error.message});
+    }
+});
+
 rutas.delete('/editarProveedor/:id', async(req,res, next)=>{
     const id = req.params.id;
     await proveedores.deleteOne({id:id});
